@@ -1,8 +1,19 @@
 # Sidekiq::Trackable::Job
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sidekiq/trackable/job`. To experiment with that code, run `bin/console` for an interactive prompt.
+Unified solution aimed at improving monitoring and failover with TrackableJob for Sidekiq and a corresponding trackable_jobs table.
 
-TODO: Delete this and the text above, and describe your gem
+Approach outline:
+
+When we queue one of the TrackableJobs, it inserts a record into trackable_jobs table before queuing job to the Sidekiq.
+This record stores job class and model_id parameter.
+That way we track when job starts and can restart them all in case of a failure, even if our Sidekiq is completely missing.
+No jobs will be forgotten. trackable_jobs also has a created_at timestamp to monitor lags.
+
+Once TrackableJob has been processed, it removes corresponding record from the trackable_jobs. 
+I.e. when all jobs has been processed successfully, we have 0 trackable jobs in this table. And that’s a healthy state.
+
+TrackableJob has a convenient method to restart all or some jobs (by ids) from this table.
+That way we can easily restart jobs which, for example, were started 3 days ago and failed to complete.
 
 ## Installation
 

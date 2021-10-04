@@ -5,8 +5,8 @@ require_relative "lib/sidekiq/trackable/job/version"
 Gem::Specification.new do |spec|
   spec.name          = "sidekiq-trackable-job"
   spec.version       = Sidekiq::Trackable::Job::VERSION
-  spec.authors       = ["Aleksey Strizhak"]
-  spec.email         = ["alexei.mifrill.strizhak@gmail.com"]
+  spec.authors       = ["Aleksey Strizhak", "Andrey Zharikov"]
+  spec.email         = ["alexey@teamsatchel.com", "andrey@zharikov.pro"]
 
   spec.summary       = "TODO: Write a short summary, because RubyGems requires one."
   spec.description   = "TODO: Write a longer description or delete this line."
