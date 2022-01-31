@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrackableJobBase
   include Sidekiq::Worker
 
@@ -16,7 +18,7 @@ class TrackableJobBase
 
   module After
     def perform(trackable_job_id)
-      raise 'RedefinedPerformError: use job_perform(model_id) method to specify perform logic' if defined?(super)
+      raise "RedefinedPerformError: use job_perform(model_id) method to specify perform logic" if defined?(super)
 
       trackable_job = ::TrackableJob.find_with_retry(trackable_job_id)
       job_perform(trackable_job.model_id)

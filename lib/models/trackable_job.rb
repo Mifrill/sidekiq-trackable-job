@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrackableJob < ApplicationRecord
   validates :job_class, :model_id, presence: true
 

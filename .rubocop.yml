@@ -1,0 +1,18 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.6
+Documentation:
+  Enabled: false
+Layout/LineLength:
+  Max: 120
+Metrics/BlockLength:
+  Max: 150
+  Exclude:
+    - "spec/**/*"
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - "spec/**/*"
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: "double_quotes"
