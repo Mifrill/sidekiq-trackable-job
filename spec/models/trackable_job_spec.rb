@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe TrackableJob do
   describe "#perform_async" do
     class TestJob

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module TrackableJob
   class TrackableJobGenerator < Rails::Generators::Base
     include Rails::Generators::Migration

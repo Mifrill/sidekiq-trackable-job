@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 describe TrackableJobBase do
   class ChildJob < TrackableJobBase
     private

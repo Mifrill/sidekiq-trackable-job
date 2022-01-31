@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "sidekiq/trackable/job"
 
 RSpec.configure do |config|

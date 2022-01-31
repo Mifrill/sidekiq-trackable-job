@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class CreateTrackableJobs < ActiveRecord::Migration[5.0]
   def change
     create_table :trackable_jobs do |t|
