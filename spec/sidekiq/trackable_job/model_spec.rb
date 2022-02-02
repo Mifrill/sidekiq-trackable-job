@@ -1,11 +1,11 @@
-describe TrackableJob do
+describe Sidekiq::TrackableJob::Model do
   describe "#perform_async" do
     class TestJob
       def self.perform_async(*); end
     end
 
     it "creates job" do
-      restart_job = create(:trackable_job, job_class: TestJob)
+      restart_job = Sidekiq::TrackableJob::Model.create!(job_class: TestJob, model_id: Faker::Number.number(digits: 10))
       expect(restart_job.job_class.constantize)
         .to receive(:perform_async).with(restart_job.id, id_type: :trackable_job_id)
       restart_job.perform_async
@@ -19,7 +19,7 @@ describe TrackableJob do
 
     it "calls #perform_async on create" do
       expect_any_instance_of(described_class).to receive(:perform_async)
-      create(:trackable_job, job_class: TestSidekiqJob)
+      Sidekiq::TrackableJob::Model.create!(job_class: TestSidekiqJob, model_id: Faker::Number.number(digits: 10))
     end
   end
 end

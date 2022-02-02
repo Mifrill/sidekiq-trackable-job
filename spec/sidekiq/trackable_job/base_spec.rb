@@ -1,5 +1,5 @@
-describe TrackableJobBase do
-  class ChildJob < TrackableJobBase
+describe Sidekiq::TrackableJob::Base do
+  class ChildJob < Sidekiq::TrackableJob::Base
     private
 
     def job_perform(*)
@@ -14,16 +14,20 @@ describe TrackableJobBase do
   let(:job_class) { subject.class }
   let(:model_id) { model.id }
 
+  it "has a version number" do
+    expect(Sidekiq::TrackableJob::VERSION).not_to be nil
+  end
+
   describe ".perform_async" do
-    it { expect { job_class.perform_async(model_id) }.to change { TrackableJob.count }.by(1) }
+    it { expect { job_class.perform_async(model_id) }.to change { Sidekiq::TrackableJob::Model.count }.by(1) }
     it { expect { job_class.perform_async(model_id) }.to change { job_class.jobs.count }.by(1) }
   end
 
   describe "#perform" do
-    let(:trackable_job) { create(:trackable_job, job_class: job_class, model_id: model_id) }
+    let(:trackable_job) { Sidekiq::TrackableJob::Model.create!(job_class: job_class, model_id: model_id) }
 
     it "raises RedefinedPerformError when method perform is redefined by child job" do
-      class TrackTestPerformErrorJob < TrackableJobBase
+      class TrackTestPerformErrorJob < Sidekiq::TrackableJob::Base
         def perform(*); end
       end
 
@@ -32,20 +36,20 @@ describe TrackableJobBase do
     end
 
     it "raises NotImplementedError when method job_perform is not defined" do
-      class TrackTestImplementedErrorJob < TrackableJobBase; end
+      class TrackTestImplementedErrorJob < Sidekiq::TrackableJob::Base; end
 
       expect { TrackTestImplementedErrorJob.new.perform(trackable_job.id) }.to raise_exception(NotImplementedError)
     end
 
     it "removes TrackableJob after success perform" do
       trackable_job_id = trackable_job.id
-      expect { job_instance.perform(trackable_job_id) }.to change { TrackableJob.count }.by(-1)
+      expect { job_instance.perform(trackable_job_id) }.to change { Sidekiq::TrackableJob::Model.count }.by(-1)
     end
 
     it "does the second attempt find to resolve replica lag for recently created record" do
       call_count = 0
       trackable_job_id = trackable_job.id
-      expect(::TrackableJob).to receive(:find).with(trackable_job.id) do
+      expect(Sidekiq::TrackableJob::Model).to receive(:find).with(trackable_job.id) do
         call_count += 1
         call_count == 1 ? (raise ActiveRecord::RecordNotFound) : trackable_job
       end.twice
@@ -54,11 +58,11 @@ describe TrackableJobBase do
   end
 
   describe "perform_async with id_type trackable_job_id" do
-    let!(:trackable_job) { create(:trackable_job, job_class: job_class, model_id: model_id) }
+    let!(:trackable_job) { Sidekiq::TrackableJob::Model.create!(job_class: job_class, model_id: model_id) }
 
     it "does not create another one trackable_job" do
       expect { job_class.perform_async(trackable_job.id, id_type: :trackable_job_id) }
-        .not_to change { TrackableJob.count }
+        .not_to change { Sidekiq::TrackableJob::Model.count }
     end
 
     it "creates sidekiq_job" do
