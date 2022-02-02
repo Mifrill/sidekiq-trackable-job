@@ -1,7 +1,7 @@
 require_relative "trackable_job/base"
+require_relative "trackable_job/version"
 
 module Sidekiq
   module TrackableJob
-    VERSION = "0.1.0".freeze
   end
 end

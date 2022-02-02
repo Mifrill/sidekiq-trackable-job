@@ -1,4 +1,4 @@
-require_relative "lib/sidekiq/trackable_job"
+require_relative "lib/sidekiq/trackable_job/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "sidekiq-trackable-job"
